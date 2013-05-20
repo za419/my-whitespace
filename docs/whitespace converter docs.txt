@@ -1,0 +1,3 @@
+Whitespace converter documentation
+
+	The Whitespace converter, BF2WS, was born solely out of need, as a fork of the Whitespace project. During project development, the need for a suitable test case was recognized, as well as the improbability of creating such a test case, given the inherent esoteric nature of Whitespace. This need was solved, via use of a converter from brainfuck. Once this converter was ready, freely available brainfuck code could be converted to Whitespace and run, and so testing became much easier. This is all of the important information relating to this converter.
