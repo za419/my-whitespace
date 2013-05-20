@@ -1,0 +1,31 @@
+Whitespace documentation
+
+	Whitespace, by Ryan Hodin, is intended to be the most naturally obfuscated programming language there is. It claims its inheritance from brainfuck, and was coded entirely on the afternoon of April 8th, 2013. It was originally written in C++. The specification is as follows:
+
+	At program start, a std::vector<unsigned char> is registered, and 30,000 cells are reserved for program usage, but the vector size remains at zero (as specified in the C++ STL specification). An index pointer is initialized to zero, then parsing begins. The interpreter reads in the target file, line by line, counting spaces until either a newline or a non-space character is encountered. As long as there are more than eight, the interpreter will execute the eight-count instruction, then subtract eight from the count. The instructions are as follows:
+
+		{one space}       Add one to the index pointer.
+		{two spaces}      Subtract one from the index pointer (if the pointer is already zero, it will be set to wrap to the current end of the array. If the array is null, then this throws a syntax error).
+		{three spaces}    Increment the byte that is pointed to by the index pointer (if the index pointer is past the right bound of the array, it will fill the array up until that point with zeros, then appends a one to the end of the array).
+		{four spaces}     Decrement the byte that is pointed to by the index pointer (if the index pointer is past the right bound of the array, it will fill the array up until that point with zeros, then appends a 255 to the end of the array, simulating an unsigned integer wraparound).
+		{five spaces}     Output the byte at that is pointed to by the index pointer (passes the current cell to the C getchar() function. If the index pointer is past the right bound of the array, then outputs a zero, without affecting the internal state of the memory array).
+		{six spaces}      Input a byte, then store it to the cell that is pointed to by the index pointer (if the index pointer is beyond the right bound of the array, it will fill up the array up until that point with zeros, then appends the input value to the end of the array).
+		{seven spaces}    If the byte that is pointed to by the index pointer is zero, then skip to the corresponding eight-space instruction. Otherwise, loop the enclosed instructions, bounded by the corresponding eight-space instruction.
+		{eight spaces}    Does nothing. Literally, nothing. It just serves as a marker for the end of the demarcated loop. In this capacity, an eight-space instruction without a corresponding seven-space instruction does NOT throw a syntax error, it is simply ignored (For those versed in C, an executed eight-space instruction simply breaks out of the instruction switch statement, without setting the syntax error flag). This is the major implementation difference between Whitespace and brainfuck.
+
+	A person who is knowledgable in brainfuck would notice that each of these instructions are almost exactly the same as brainfuck instructions. In fact, a Whitespace program can be translated to a brainfuck program by consulting the following table:
+	
+	  Whitespace (number of spaces)  |           brainfuck
+	---------------------------------|---------------------------------
+	               1                 |               >
+				   2                 |               <
+				   3                 |               +
+				   4                 |               -
+				   5                 |               .
+				   6                 |               ,
+				   7                 |               [
+				   8                 |               ]
+
+	Since Whitespace can be (almost) directly translated into brainfuck, a Turing-complete language, excepting minor differences in implementation and the error-prevention done by Whitespace, Whitespace itself is a Turing-complete language, and also a Turing tarpit. As a point of interest, this translation to brainfuck is the simplest way to compile Whitespace, at least until I decide to write a native compiler.
+	Reference implementation warnings: A newline must be appended at the end of the file, or else the interpreter will inadvertently ignore the last instruction in the program. This bug is being worked on. Also, any program, at least in the reference implementation, can be reloaded from disk by pressing CTRL+BREAK, or otherwise generating a SIGQUIT (on platforms that support it) or SIGTERM. Once the code cache has been rebuilt, the code should continue in place, executing the same instructions (by index), with the same program memory. This may induce unexpected behavior if this is triggered during the execution of an instruction, especially if said instruction, again by index, is changed by the reload operation.
+	I would close with the traditional "Hello World!" program example, but this would be excessively long and be completely illegible, in keeping with the intentions of Whitespace. Therefore, this program is left as an exercise for the reader. Happy obfuscating!
