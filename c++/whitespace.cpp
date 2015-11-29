@@ -10,7 +10,7 @@
 #include <time.h>
 #include <sstream>
 #include <signal.h>
-using namespace std; // Really shouldn't do this...but it had to be done for the *$*#*@! code to compile, so...
+using namespace std; // Really shouldn't do this...
 
 //#define DEBUG
 
@@ -188,8 +188,8 @@ void loop () throw ()
 				char str [101]; // 101 should be plenty.
 				sprintf (str, "Executing instruction at location %u: %u.", i, code[i]);
 				applog (str, info);
+				if (exec(code[i]))
 				{
-				if (exec (code[i]))
 					char str [151]; // 151 should be enough to cover our needs.
 					sprintf (str, "Syntax error executing instruction %u, instruction number %u of %u. Program execution: %.2F%% complete.", (unsigned)code[i], (unsigned)i, (unsigned)code.size(), float(100*i)/code.size());
 					printf ("%s\n", str);
